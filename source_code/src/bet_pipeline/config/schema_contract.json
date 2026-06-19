@@ -1,0 +1,30 @@
+{
+  "contract_version": "1.0.0",
+  "primary_key": ["bet_id"],
+  "ordering_key": ["customer_id", "bet_num"],
+  "domain_values": {
+    "category": ["sports", "racing"],
+    "stake_type": ["cash", "bonus"],
+    "bet_result": ["return", "no-return"]
+  },
+  "required_columns": {
+    "bet_id": "integer, unique across file",
+    "customer_id": "UUID string",
+    "bet_datetime": "parseable datetime",
+    "bet_num": "positive integer; authoritative customer bet order",
+    "betting_amount": "numeric AUD amount > 0",
+    "price": "numeric decimal odds > 1",
+    "category": "sports | racing",
+    "stake_type": "cash | bonus",
+    "bet_result": "return | no-return",
+    "payout": "numeric amount matching payout business rule",
+    "return_for_entain": "numeric amount matching return business rule"
+  },
+  "money_precision": {
+    "scale": "0.01",
+    "rounding": "ROUND_HALF_UP",
+    "tolerance_abs": "0.01",
+    "policy": "Monetary formulas are calculated with Decimal, rounded to cents with ROUND_HALF_UP, and compared with a deterministic one-cent absolute tolerance to absorb source floating-point residue."
+  },
+  "invalid_record_policy": "Any row with one or more rule failures is quarantined and excluded from aggregation. Invalid early bets are not replaced by later bets in first-20 features."
+}

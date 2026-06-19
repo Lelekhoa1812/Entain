@@ -1,0 +1,40 @@
+{
+  "feature_set_name": "customer_first20_bet_features",
+  "feature_set_version": "1.0.0",
+  "entity_key": "customer_id",
+  "window_policy": "Use valid rows where 1 <= bet_num <= 20. Later bet numbers are not used to replace invalid or missing early bets.",
+  "output_columns": [
+    "customer_id",
+    "first_bet_datetime",
+    "twentieth_bet_datetime",
+    "bets_used",
+    "total_betting_amount",
+    "mean_betting_amount",
+    "mean_price",
+    "pct_racing",
+    "pct_cash",
+    "pct_return",
+    "total_payout",
+    "total_return_for_entain",
+    "feature_generated_at",
+    "feature_window_policy",
+    "invalid_first20_count",
+    "feature_quality_flag"
+  ],
+  "features": {
+    "first_bet_datetime": "Datetime of the earliest valid bet in the customer's first-20 bet_num window.",
+    "twentieth_bet_datetime": "Datetime of valid bet_num 20 when present; null otherwise.",
+    "bets_used": "Count of valid records included in the first-20 window.",
+    "total_betting_amount": "Sum of betting_amount across included valid rows.",
+    "mean_betting_amount": "Mean betting_amount across included valid rows.",
+    "mean_price": "Mean decimal odds price across included valid rows.",
+    "pct_racing": "Share of included valid rows where category is racing.",
+    "pct_cash": "Share of included valid rows where stake_type is cash.",
+    "pct_return": "Share of included valid rows where bet_result is return.",
+    "total_payout": "Sum of payout across included valid rows.",
+    "total_return_for_entain": "Sum of return_for_entain across included valid rows.",
+    "feature_generated_at": "UTC timestamp at which the feature file was generated.",
+    "invalid_first20_count": "Number of quarantined records with bet_num in the first-20 window for the same customer_id.",
+    "feature_quality_flag": "FULL_20_VALID_BETS or PARTIAL_OR_REVIEW_FIRST20_WINDOW."
+  }
+}

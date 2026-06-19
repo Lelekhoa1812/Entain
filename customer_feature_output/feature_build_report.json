@@ -1,0 +1,96 @@
+{
+  "customer_count": 5000,
+  "customers_without_valid_first_window_count": 0,
+  "feature_set_name": "customer_first20_bet_features",
+  "feature_set_version": "1.0.0",
+  "feature_window_policy": "valid records with bet_num <= first_n_bets; invalid early rows are not replaced by later bets",
+  "first_n_bets": 20,
+  "full_quality_customer_count": 3894,
+  "generated_at": "2026-06-19T01:49:39+00:00",
+  "input_metadata": {
+    "input_path": "data/bets.csv",
+    "input_sha256": "5bf81e073584c2306d4be579d42ff287e9cdaa7de5728b3b27191d588b004c3f"
+  },
+  "notes": [
+    "The feature job validates the raw file itself, so it does not depend on running the validation CLI first.",
+    "A later bet_num is never pulled into the first-N window to patch over an invalid earlier row.",
+    "Customers with incomplete or invalid first-N windows stay visible through bets_used and feature_quality_flag."
+  ],
+  "output_columns": [
+    "customer_id",
+    "first_bet_datetime",
+    "twentieth_bet_datetime",
+    "bets_used",
+    "total_betting_amount",
+    "mean_betting_amount",
+    "mean_price",
+    "pct_racing",
+    "pct_cash",
+    "pct_return",
+    "total_payout",
+    "total_return_for_entain",
+    "feature_generated_at",
+    "feature_window_policy",
+    "invalid_first20_count",
+    "feature_quality_flag"
+  ],
+  "output_paths": {
+    "csv": "customer_feature_output/customer_features.csv",
+    "feature_build_report": "customer_feature_output/feature_build_report.json",
+    "parquet": "customer_feature_output/customer_features.parquet"
+  },
+  "partial_or_review_customer_count": 1106,
+  "run_id": "submitted-feature-build",
+  "schema_contract_version": "1.0.0",
+  "table_outputs": {
+    "csv": "customer_feature_output/customer_features.csv",
+    "parquet": "customer_feature_output/customer_features.parquet"
+  },
+  "validation_summary": {
+    "extra_columns": [],
+    "failure_counts_by_rule": {
+      "bet_datetime_decreases_with_bet_num": 3884,
+      "betting_amount_not_positive": 835,
+      "price_not_greater_than_one": 5,
+      "return_for_entain_calculation_mismatch": 24
+    },
+    "generated_at": "2026-06-19T01:49:39+00:00",
+    "input_metadata": {
+      "input_path": "data/bets.csv",
+      "input_sha256": "5bf81e073584c2306d4be579d42ff287e9cdaa7de5728b3b27191d588b004c3f"
+    },
+    "input_rows": 372296,
+    "invalid_row_rate": 0.012732,
+    "invalid_rows": 4740,
+    "money_precision": {
+      "policy": "Monetary formulas are calculated with Decimal, rounded to cents with ROUND_HALF_UP, and compared with a deterministic one-cent absolute tolerance to absorb source floating-point residue.",
+      "rounding": "ROUND_HALF_UP",
+      "scale": "0.01",
+      "tolerance_abs": "0.01"
+    },
+    "money_tolerance_abs": "0.01",
+    "non_fatal_sequence_warnings": [],
+    "notes": [
+      "Any row with at least one failure is written to invalid_bets.csv.",
+      "Category, stake_type, and bet_result are stripped and lowercased before rule checks.",
+      "Raw text values are preserved in invalid_bets.csv alongside normalized helper fields.",
+      "Money checks use Decimal arithmetic with deterministic cent rounding and one-cent tolerance."
+    ],
+    "run_id": "submitted-feature-build",
+    "schema_contract_version": "1.0.0",
+    "valid_output_contract": [
+      "bet_id",
+      "customer_id",
+      "bet_datetime",
+      "bet_num",
+      "betting_amount",
+      "price",
+      "category",
+      "stake_type",
+      "bet_result",
+      "payout",
+      "return_for_entain"
+    ],
+    "valid_rows": 367556
+  }
+}

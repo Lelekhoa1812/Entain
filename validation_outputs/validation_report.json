@@ -1,0 +1,52 @@
+{
+  "extra_columns": [],
+  "failure_counts_by_rule": {
+    "bet_datetime_decreases_with_bet_num": 3884,
+    "betting_amount_not_positive": 835,
+    "price_not_greater_than_one": 5,
+    "return_for_entain_calculation_mismatch": 24
+  },
+  "generated_at": "2026-06-19T01:49:26+00:00",
+  "input_metadata": {
+    "input_path": "data/bets.csv",
+    "input_sha256": "5bf81e073584c2306d4be579d42ff287e9cdaa7de5728b3b27191d588b004c3f"
+  },
+  "input_rows": 372296,
+  "invalid_row_rate": 0.012732,
+  "invalid_rows": 4740,
+  "money_precision": {
+    "policy": "Monetary formulas are calculated with Decimal, rounded to cents with ROUND_HALF_UP, and compared with a deterministic one-cent absolute tolerance to absorb source floating-point residue.",
+    "rounding": "ROUND_HALF_UP",
+    "scale": "0.01",
+    "tolerance_abs": "0.01"
+  },
+  "money_tolerance_abs": "0.01",
+  "non_fatal_sequence_warnings": [],
+  "notes": [
+    "Any row with at least one failure is written to invalid_bets.csv.",
+    "Category, stake_type, and bet_result are stripped and lowercased before rule checks.",
+    "Raw text values are preserved in invalid_bets.csv alongside normalized helper fields.",
+    "Money checks use Decimal arithmetic with deterministic cent rounding and one-cent tolerance."
+  ],
+  "output_paths": {
+    "invalid_bets": "validation_outputs/invalid_bets.csv",
+    "valid_bets": "validation_outputs/valid_bets.csv",
+    "validation_report": "validation_outputs/validation_report.json"
+  },
+  "run_id": "submitted-validation",
+  "schema_contract_version": "1.0.0",
+  "valid_output_contract": [
+    "bet_id",
+    "customer_id",
+    "bet_datetime",
+    "bet_num",
+    "betting_amount",
+    "price",
+    "category",
+    "stake_type",
+    "bet_result",
+    "payout",
+    "return_for_entain"
+  ],
+  "valid_rows": 367556
+}
