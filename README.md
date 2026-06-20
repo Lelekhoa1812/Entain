@@ -193,6 +193,19 @@
  - Customers without a valid first-window row: `0`
  - Both CSV and Parquet outputs are present.
 
+## Data Observations & Cleaning
+
+`data/bets.csv` remains the source of truth for the current run. The extract is skewed toward racing (≈74.8% racing bets vs 25.2% sports) and cash-backed stakes (≈95% cash, 5% bonus), which aligns with the feature window focus on high-frequency, high-confidence customers. The numeric range is wide: `price` runs from 0.356 to 26.71, and `betting_amount` ranges from −50.71 up to 89.40 AUD, so negative wagers and invalid prices are present in production data even before copying into this repo. Roughly 4,740 rows (1.27%) fail validation, with 3,884 flagged because timestamps move backwards within a customer's bet sequence, 835 because the stake is non-positive, 5 because price is ≤1, and a handful (24) where payout or return for Entain does not match the business formula.
+
+These observations drove the cleaning logic in `source_code/src/bet_pipeline/validate.py`:
+
+- `source_code/src/bet_pipeline/io.py::read_bets_csv` ingests every column as a string so pandas does not silently coerce dates, numbers, or UUIDs before validation.
+- `_normalise_raw_frame` trims and lowercases the text columns referenced by the enums in `source_code/src/bet_pipeline/constants.py`, parses UUIDs, timestamps, and Decimal fields, and stamps each row with `source_row_number` so quarantined rows stay traceable.
+- `validate_bets` applies the rules documented in the task brief, enforces unique `(customer_id, bet_num)` sequences, recalculates expected `payout`/`return_for_entain` with deterministic cent rounding, and records explicit failure codes when a row is rejected.
+- Invalid rows are written to `validation_outputs/invalid_bets.csv` with all helper fields intact, while valid rows are reordered into the canonical schema before being handed to feature generation.
+
+The new `tests/test_data_observation.py` file codifies these expectations so the run stays aligned with the observed anomalies: it confirms that at least the critical failure classes (negatives, ordering, price floor, formula mismatches) are still quarantined and documents the skewed distributions that justify the current feature-window sizing.
+
  ## Testing & Verification
 
  ```bash
